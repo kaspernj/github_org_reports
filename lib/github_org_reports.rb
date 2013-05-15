@@ -21,7 +21,8 @@ class GithubOrgReports
       :db => @db,
       :class_path => "#{File.dirname(__FILE__)}/../models",
       :class_pre => "",
-      :module => GithubOrgReports::Models
+      :module => GithubOrgReports::Models,
+      :require_all => true
     )
   end
   

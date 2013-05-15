@@ -1,5 +1,5 @@
 class GithubOrgReports::Models::PullRequest < Baza::Model
-  has_many :pull_request_organization_link
+  has_many [[:PullRequestOrganizationLink, :pull_request_id]]
   
   def scan_hash
     hash = {}

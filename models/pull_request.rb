@@ -1,7 +1,9 @@
 class GithubOrgReports::Models::PullRequest < Baza::Model
+  has_many :pull_request_organization_link
+  
   def scan_hash
     hash = {}
-    self[:text].to_s.scan(/#(\{(.+?)\})#/) do |match|
+    self[:text].to_s.scan(/!(\{(.+?)\})!/) do |match|
       hash.merge!(JSON.parse(match[1]))
     end
     

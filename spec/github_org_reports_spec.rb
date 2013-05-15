@@ -11,6 +11,7 @@ describe "GithubOrgReports" do
     begin
       gor = GithubOrgReports.new(:db => db)
       gor.add_repo GithubOrgReports::Repo.new(:user => "kaspernj", :name => "php4r")
+      gor.add_repo GithubOrgReports::Repo.new(:user => "kaspernj", :name => "github_org_reports")
       gor.scan
     rescue => e
       puts e.inspect

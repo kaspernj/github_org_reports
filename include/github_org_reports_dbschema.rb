@@ -4,10 +4,24 @@ class GithubOrgReports::Dbschema
       :Commit => {
         :columns => [
           {:name => :id, :type => :int, :autoincr => true, :primarykey => true},
-          {:name => :user_id, :type => :int}
+          {:name => :user_id, :type => :int},
+          {:name => :sha, :type => :varchar},
+          {:name => :text, :type => :text},
+          {:name => :time, :type => :int}
         ],
         :indexes => [
           :user_id
+        ]
+      },
+      :CommitOrganizationLink => {
+        :columns => [
+          {:name => :id, :type => :int, :autoincr => true, :primarykey => true},
+          {:name => :commit_id, :type => :int},
+          {:name => :organization_id, :type => :int}
+        ],
+        :indexes => [
+          :commit_id,
+          :organization_id
         ]
       },
       :Organization => {

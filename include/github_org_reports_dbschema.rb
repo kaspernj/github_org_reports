@@ -1,6 +1,15 @@
 class GithubOrgReports::Dbschema
   SCHEMA = {
     :tables => {
+      :Commit => {
+        :columns => [
+          {:name => :id, :type => :int, :autoincr => true, :primarykey => true},
+          {:name => :user_id, :type => :int}
+        ],
+        :indexes => [
+          :user_id
+        ]
+      },
       :Organization => {
         :columns => [
           {:name => :id, :type => :int, :autoincr => true, :primarykey => true},

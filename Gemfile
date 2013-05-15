@@ -6,6 +6,7 @@ source "http://rubygems.org"
 gem "baza", :path => "/Users/kaspernj/Dev/Ruby/baza"
 gem "json"
 gem "github_api"
+gem "string-cases"
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.

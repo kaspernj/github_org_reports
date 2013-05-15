@@ -1,0 +1,3 @@
+class GithubOrgReports::Models
+  
+end

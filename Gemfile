@@ -4,6 +4,7 @@ source "http://rubygems.org"
 #   gem "activesupport", ">= 2.3.5"
 
 gem "baza", :path => "/Users/kaspernj/Dev/Ruby/baza"
+gem "json"
 gem "github_api"
 
 # Add dependencies to develop your gem here.

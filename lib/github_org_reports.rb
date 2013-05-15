@@ -19,7 +19,9 @@ class GithubOrgReports
     
     @ob = Baza::ModelHandler.new(
       :db => @db,
-      :class_path => "#{File.dirname(__FILE__)}/../models"
+      :class_path => "#{File.dirname(__FILE__)}/../models",
+      :class_pre => "",
+      :module => GithubOrgReports::Models
     )
   end
   
@@ -34,12 +36,26 @@ class GithubOrgReports
       prs = gh.pull_requests.list(repo.user, repo.name)
       
       count = 0
-      prs.each do |pr|
+      prs.each do |pr_data|
         count += 1
-        puts "Pull #{count} keys: #{pr.keys}"
+        puts "Pull #{count} keys: #{pr_data.keys}"
         
-        text = pr.body_text
+        text = pr_data.body_text
         
+        user = @ob.get_or_add(:User, {
+          :name => pr_data.user
+        })
+        
+        pr = @ob.get_or_add(:PullRequest, {
+          :github_id => pr_data.id
+        })
+        
+        pr[:user_id] = user.id
+        pr[:text] = pr_data.body_text
+        pr[:html] = pr_data.body_html
+        
+        pr.scan_time
+        pr.scan_orgs
       end
     end
   end

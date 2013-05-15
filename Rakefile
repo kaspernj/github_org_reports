@@ -17,8 +17,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "github_org_reports"
   gem.homepage = "http://github.com/kaspernj/github_org_reports"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{A gem to generate organization reports based on pull requests and commits.}
+  gem.description = %Q{A gem to generate organization reports based on pull requests and commits.}
   gem.email = "k@spernj.org"
   gem.authors = ["kaspernj"]
   # dependencies defined in Gemfile

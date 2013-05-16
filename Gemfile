@@ -3,7 +3,7 @@ source "http://rubygems.org"
 # Example:
 #   gem "activesupport", ">= 2.3.5"
 
-gem "baza", :path => "/Users/kaspernj/Dev/Ruby/baza"
+gem "baza", ">= 0.0.10", :path => "/Users/kaspernj/Dev/Ruby/baza"
 gem "json"
 gem "github_api"
 gem "string-cases"

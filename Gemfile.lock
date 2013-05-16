@@ -1,10 +1,11 @@
 PATH
   remote: /Users/kaspernj/Dev/Ruby/baza
   specs:
-    baza (0.0.8)
+    baza (0.0.10)
       array_enumerator
       datet
       knjrbfw
+      string-cases
       wref
 
 GEM
@@ -80,7 +81,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  baza!
+  baza (>= 0.0.10)!
   bundler (>= 1.0.0)
   github_api
   jeweler (~> 1.8.4)

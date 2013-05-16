@@ -52,6 +52,8 @@ class GithubOrgReports::Dbschema
           {:name => :github_id, :type => :int, :renames => [:pull_request_id]},
           {:name => :number, :type => :int},
           {:name => :user_id, :type => :int},
+          {:name => :date, :type => :datetime},
+          {:name => :title, :type => :varchar},
           {:name => :text, :type => :text},
           {:name => :html, :type => :text},
           {:name => :time, :type => :int}

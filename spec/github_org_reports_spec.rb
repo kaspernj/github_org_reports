@@ -42,12 +42,15 @@ describe "GithubOrgReports" do
       
       res[:orgs_time][org_knjit.id][:secs].should eql(2700)
       res[:orgs_time][org_gfish.id][:secs].should eql(1800)
-      
-      puts res
     rescue => e
       puts e.inspect
       puts e.backtrace
       raise e
     end
+  end
+  
+  it "should be able to convert seconds to time strings" do
+    GithubOrgReports.secs_to_time(1800).should eql("0:30")
+    GithubOrgReports.secs_to_time(2700).should eql("0:45")
   end
 end

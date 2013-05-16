@@ -55,7 +55,8 @@ class GithubOrgReports::Models::PullRequest < Baza::Model
   end
   
   def title(args = nil)
-    title_str = self[:text].to_s.lines.first.to_s.strip
+    title_str = self[:title].to_s.strip
+    title_str = self[:text].to_s.lines.first.to_s.strip if title_str.empty?
     mlength = (args && args[:maxlength]) ? args[:maxlength] : 15
     
     if title_str.length > mlength

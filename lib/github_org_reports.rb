@@ -12,7 +12,7 @@ class GithubOrgReports
   end
   
   def self.secs_to_time(secs)
-    return "00:00" if secs <= 0
+    return "0:00" if secs <= 0
     
     hours = (secs / 3600).floor
     secs -= hours * 3600
@@ -76,11 +76,11 @@ class GithubOrgReports
       @cur_repo = repo
       
       gh_args = {
-        :user => repo.args[:user],
-        :repo => repo.args[:name]
+        :user => repo.user,
+        :repo => repo.name
       }
-      gh_args[:login] = repo.args[:login] if repo.args[:login]
-      gh_args[:password] = repo.args[:password] if repo.args[:password]
+      gh_args[:login] = repo.args[:login] unless repo.args[:login].to_s.strip.empty?
+      gh_args[:password] = repo.args[:password] unless repo.args[:password].to_s.strip.empty?
       
       gh = ::Github.new(gh_args)
       
@@ -122,9 +122,13 @@ class GithubOrgReports
           :number => number
         })
         
+        #puts "PullRequest: #{pr_data.to_hash}"
+        
         pr[:user_id] = user.id
+        pr[:title] = pr_data.title
         pr[:text] = pr_data.body_text
         pr[:html] = pr_data.body_html
+        pr[:date] = Time.parse(pr_data.created_at)
         
         pr.scan
         
@@ -147,8 +151,6 @@ class GithubOrgReports
         secs += match_time[1].to_i * 3600
         secs += match_time[2].to_i * 60
         
-        res[:secs] += secs
-        
         #Parse organizations.
         if orgs = hash["orgs"]
           orgs = [orgs] if !orgs.is_a?(Array)
@@ -165,6 +167,8 @@ class GithubOrgReports
             res[:orgs_time][org.id] = {:secs => 0} unless res[:orgs_time].key?(org.id)
             res[:orgs_time][org.id][:secs] += secs
           end
+        else
+          res[:secs] += secs
         end
       end
     end

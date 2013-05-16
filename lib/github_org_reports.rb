@@ -36,11 +36,26 @@ class GithubOrgReports
   
   def scan_hash(str)
     str.to_s.scan(/!(\{(.+?)\})!/) do |match|
+      json_str = match[0]
+      
+      
+      #Fix missing quotes in 'time' and 'orgs' to make it easier to write.
+      json_str.gsub!(/time:\s*([\d+:]+)/, "\"time\": \"\\1\"")
+      
+      if orgs_match = json_str.match(/orgs:\s*\[(.+?)\]/)
+        orgs_str = orgs_match[1]
+        orgs_str.gsub!(/\s*(^|\s*,\s*)([A-z_\d]+)/, "\\1\"\\2\"")
+        
+        json_str.gsub!(orgs_match[0], "\"orgs\": [#{orgs_str}]")
+      end
+      
+      
+      #Parse the JSON and yield it.
       begin
-        yield JSON.parse(match[1])
+        yield JSON.parse(json_str)
       rescue JSON::ParserError => e
         $stderr.puts e.inspect
-        $stderr.puts e.backtrace
+        #$stderr.puts e.backtrace
       end
     end
   end
@@ -66,8 +81,10 @@ class GithubOrgReports
           :name => pr_data.user
         })
         
+        github_id = pr_data.id.to_i
+        raise "Invalid github-ID: '#{github_id}'." if github_id <= 0
         pr = @ob.get_or_add(:PullRequest, {
-          :github_id => pr_data.id
+          :github_id => github_id
         })
         
         pr[:user_id] = user.id
@@ -76,7 +93,7 @@ class GithubOrgReports
         
         pr.scan
         
-        commits = gh.pull_requests.commits(:repo => repo.args[:name], :user => repo.args[:user], :number => pr_data.number)
+        commits = gh.pull_requests.commits(:repo => repo.args[:name], :user => repo.args[:user], :number => pr_data.number, :login => repo.args[:login], :password => repo.args[:password])
         commits.each do |commit_data|
           commit = init_commit_from_data(commit_data)
           commit[:pull_request_id] = pr.id
@@ -106,15 +123,10 @@ class GithubOrgReports
             
             org = self.ob.get_or_add(:Organization, {:name_short => org_name_short_dc})
             
-            link = self.ob.get_or_add(:PullRequestOrganizationLink, {
-              :organization_id => org.id,
-              :pull_request_id => self.id
-            })
-            
             res[:orgs] << org unless res[:orgs].include?(org)
             
-            res[:orgs_time][org.id] = {:secs => 0} unless res[:orgs].key?(org.id)
-            res[:orgs_time][org.id][:secs] += match_time
+            res[:orgs_time][org.id] = {:secs => 0} unless res[:orgs_time].key?(org.id)
+            res[:orgs_time][org.id][:secs] += secs
           end
         end
       end
@@ -126,11 +138,21 @@ class GithubOrgReports
   private
   
   def init_commit_from_data(commit_data)
+    sha = commit_data.sha
+    raise "Invalid SHA: '#{sha}' (#{commit_data.to_hash})." if sha.to_s.strip.empty?
+    
     commit = @ob.get_or_add(:Commit, {
-      :sha => commit_data.sha
+      :sha => sha
     })
+    raise "Commit didnt get added right '#{commit[:sha]}', '#{sha}'." if sha != commit[:sha]
+    
     commit[:text] = commit_data.commit
-    commit[:date] = commit_data.commit.date
+    
+    
+    date = Time.parse(commit_data.commit.committer.date)
+    raise "Invalid date: '#{date}' (#{commit_data.commit.to_hash})" if !date
+    
+    commit[:date] = date
     
     if commit_data.author
       user = @ob.get_or_add(:User, {

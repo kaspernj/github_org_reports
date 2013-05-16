@@ -27,4 +27,16 @@ class GithubOrgReports::Models::PullRequest < Baza::Model
     
     
   end
+  
+  def title(args = nil)
+    title_str = self[:text].to_s.lines.first.strip
+    mlength = (args && args[:maxlength]) ? args[:maxlength] : 15
+    
+    if title_str.length > mlength
+      title_str = title_str.slice(0, mlength).strip
+      title_str << "..."
+    end
+    
+    return title_str
+  end
 end

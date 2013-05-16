@@ -10,9 +10,10 @@ class GithubOrgReports::Models::Commit < Baza::Model
     hash[:orgs].each do |org|
       link = self.ob.get_or_add(:CommitOrganizationLink, {
         :organization_id => org.id,
-        :pull_request_id => self.id,
-        :time => hash[:orgs_time][org.id]
+        :commit_id => self.id
       })
+      
+      link[:time] = hash[:orgs_time][org.id]
     end
     
     

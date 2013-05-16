@@ -5,7 +5,9 @@ class GithubOrgReports::Dbschema
         :columns => [
           {:name => :id, :type => :int, :autoincr => true, :primarykey => true},
           {:name => :user_id, :type => :int},
+          {:name => :pull_request_id, :type => :int},
           {:name => :sha, :type => :varchar},
+          {:name => :date, :type => :datetime},
           {:name => :text, :type => :text},
           {:name => :time, :type => :int}
         ],
@@ -17,7 +19,8 @@ class GithubOrgReports::Dbschema
         :columns => [
           {:name => :id, :type => :int, :autoincr => true, :primarykey => true},
           {:name => :commit_id, :type => :int},
-          {:name => :organization_id, :type => :int}
+          {:name => :organization_id, :type => :int},
+          {:name => :time, :type => :int}
         ],
         :indexes => [
           :commit_id,
@@ -55,7 +58,8 @@ class GithubOrgReports::Dbschema
         :columns => [
           {:name => :id, :type => :int, :autoincr => true, :primarykey => true},
           {:name => :pull_request_id, :type => :int},
-          {:name => :organization_id, :type => :int}
+          {:name => :organization_id, :type => :int},
+          {:name => :time, :type => :int}
         ],
         :indexes => [
           :pull_request_id,

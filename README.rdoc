@@ -1,6 +1,25 @@
 = github_org_reports
 
-Description goes here.
+A gem able to generate organization based statistics based on information given in commits and pull requests.
+
+Example:
+
+1. Make some commits that contains information like this:
+
+  My commit message.
+  !{time: '00:30', orgs: [org1, org3]}!
+
+2. Run a small scripts that uses the gem:
+
+  require "rubygems"
+  require "github_org_reports"
+  
+  db = Baza::Db.new(...) #See "baza" for this part.
+  gor = GithubOrgReports.new(:db => db)
+  gor.add_repo GithubOrgReports::Repo.new(:user => "username", :name => "reponame", :login => "your_username", :password => "your_password")
+  gor.scan
+
+3. You can now go through the database to get the various time-information.
 
 == Contributing to github_org_reports
  

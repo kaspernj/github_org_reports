@@ -47,3 +47,6 @@ pkg
 
 # For rubinius:
 #*.rbc
+
+# Login information for Github.
+spec/spec_info.txt

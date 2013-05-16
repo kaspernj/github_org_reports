@@ -22,4 +22,32 @@ describe "GithubOrgReports" do
       raise e
     end
   end
+  
+  it "should be able to parse special json strings" do
+    str = "!{time: 00:30, orgs: [knjit, gfish]}!\n"
+    str << "!{time: 00:15, orgs: [knjit]}!"
+    
+    db_path = "#{Dir.tmpdir}/github_org_reports.sqlite3"
+    db = Baza::Db.new(:type => :sqlite3, :path => db_path, :index_append_table_name => true)
+    
+    login_info = JSON.parse(File.read("#{File.dirname(__FILE__)}/spec_info.txt").to_s.strip)
+    
+    begin
+      gor = GithubOrgReports.new(:db => db)
+      
+      res = gor.scan_for_time_and_orgs(str)
+      
+      org_knjit = gor.ob.get_by(:Organization, :name_short => "knjit")
+      org_gfish = gor.ob.get_by(:Organization, :name_short => "gfish")
+      
+      res[:orgs_time][org_knjit.id][:secs].should eql(2700)
+      res[:orgs_time][org_gfish.id][:secs].should eql(1800)
+      
+      puts res
+    rescue => e
+      puts e.inspect
+      puts e.backtrace
+      raise e
+    end
+  end
 end
